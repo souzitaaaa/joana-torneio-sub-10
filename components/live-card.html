@@ -1,0 +1,29 @@
+<!--
+  Componente reutilizável: cartão de jogo ao vivo / em destaque.
+  É um <template> (não é renderizado sozinho); o js/render.js clona-o
+  e preenche os elementos marcados com [data-slot] para cada jogo.
+-->
+<template id="tpl-live-card">
+  <div class="live-card">
+    <div class="live-top">
+      <span class="live-tag" data-slot="tag">
+        <span class="live-dot" data-slot="dot"></span><span data-slot="tag-text"></span>
+      </span>
+      <span class="live-meta" data-slot="meta"></span>
+    </div>
+    <div class="live-scoreline">
+      <div class="live-team">
+        <div class="team-crest" data-slot="crest-casa"></div>
+        <span data-slot="nome-casa"></span>
+      </div>
+      <div class="live-score">
+        <span data-slot="golos-casa"></span><span class="sep">:</span><span data-slot="golos-fora"></span>
+      </div>
+      <div class="live-team">
+        <div class="team-crest" data-slot="crest-fora"></div>
+        <span data-slot="nome-fora"></span>
+      </div>
+    </div>
+    <div class="live-clock" data-slot="clock"></div>
+  </div>
+</template>

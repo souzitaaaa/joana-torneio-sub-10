@@ -1,0 +1,1272 @@
+:root {
+    --pitch: #163C2E;
+    --pitch-light: #1F4F3B;
+    --gold: #D8A84C;
+    --gold-soft: #F1DFB2;
+    --chalk: #F5F6F8;
+    --card: #FFFFFF;
+    --ink: #161F1A;
+    --ink-soft: #5B675F;
+    --line: rgba(22, 32, 26, 0.10);
+    --live: #C74A34;
+    --radius: 18px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/* ---------- ANIMAÇÕES DE ENTRADA / RENDER ---------- */
+/* Fade + leve deslize para cima, usado nos cartões e linhas que são
+   inseridos dinamicamente (js/animate.js aplica esta classe). */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-in {
+    animation: fadeInUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Fade simples, usado nos componentes estáticos (header/footer)
+   assim que são injetados via fetch. */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.comp-fade-in {
+    animation: fadeIn 0.4s ease both;
+}
+
+/* Transição da view atual quando o router (js/router.js) troca o
+   conteúdo de #viewOutlet ao mudar de rota — substitui o "flash"
+   de uma recarga completa da página. */
+@keyframes viewFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#viewOutlet.view-enter {
+    animation: viewFadeIn 0.35s ease both;
+}
+
+/* Escudos das equipas: aparecem com um fade suave assim que a
+   imagem carrega, em vez de "aparecerem" de repente. */
+.crest-img {
+    opacity: 0;
+    transition: opacity 0.35s ease;
+}
+
+.crest-img.loaded {
+    opacity: 1;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: var(--chalk);
+    color: var(--ink);
+    font-family: 'Work Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+.display {
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+}
+
+.mono {
+    font-family: 'JetBrains Mono', monospace;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.app {
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background: var(--chalk);
+    position: relative;
+    padding-bottom: 48px;
+}
+
+/* ---------- HERO BANNER ---------- */
+.hero-banner {
+    position: relative;
+    width: 100%;
+    line-height: 0;
+    /* fica logo a seguir ao header (verde), por isso não precisa
+       de espaço próprio antes */
+}
+
+.hero-banner img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* fundido suave da base do poster para o fundo da app, para não
+   cortar a imagem de forma abrupta */
+.hero-banner::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 64px;
+    background: linear-gradient(to bottom, rgba(245, 246, 248, 0) 0%, var(--chalk) 100%);
+    pointer-events: none;
+}
+
+/* ---------- HEADER ---------- */
+.app-header {
+    background:
+        radial-gradient(circle at 12% -10%, rgba(255, 255, 255, 0.10), transparent 55%),
+        linear-gradient(135deg, var(--pitch-light) 0%, var(--pitch) 55%, #0D251C 100%);
+    color: var(--chalk);
+    padding: 22px 20px 26px;
+    position: relative;
+}
+
+.header-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    z-index: 1;
+}
+
+.brand-logo {
+    width: 38px;
+    height: 38px;
+    object-fit: contain;
+    flex: none;
+}
+
+.brand-title {
+    font-family: 'Anton', sans-serif;
+    font-size: 19px;
+    letter-spacing: 0.01em;
+    color: var(--chalk);
+}
+
+.header-tabs {
+    display: flex;
+    gap: 6px;
+    margin-top: 20px;
+    position: relative;
+    z-index: 1;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.header-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.h-tab {
+    flex: none;
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 12.5px;
+    font-weight: 600;
+    background: rgba(246, 243, 234, 0.08);
+    color: rgba(246, 243, 234, 0.75);
+    border: 1px solid rgba(246, 243, 234, 0.12);
+    white-space: nowrap;
+}
+
+.h-tab.active {
+    background: var(--gold);
+    color: var(--pitch);
+    border-color: var(--gold);
+}
+
+/* ---------- SECTIONS ---------- */
+.section {
+    padding: 22px 20px 0;
+}
+
+.section-title {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.section-title h2 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--ink-soft);
+    margin: 0;
+    font-weight: 700;
+}
+
+.section-title .link {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--pitch);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.section-title .link i {
+    font-size: 9px;
+}
+
+/* ---------- SECTIONS ---------- */
+.section {
+    padding: 22px 20px 0;
+}
+
+.section-title {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.section-title h2 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--ink-soft);
+    margin: 0;
+    font-weight: 700;
+}
+
+.section-title .link {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--pitch);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.section-title .link i {
+    font-size: 9px;
+}
+
+/* ---------- LIVE SCOREBOARD CARD ---------- */
+.live-card {
+    background:
+        radial-gradient(circle at 12% -10%, rgba(255, 255, 255, 0.10), transparent 55%),
+        linear-gradient(135deg, var(--pitch-light) 0%, var(--pitch) 55%, #0D251C 100%);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    color: var(--chalk);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 12px 24px -12px rgba(13, 37, 28, 0.5);
+}
+
+.live-card+.live-card {
+    margin-top: 12px;
+}
+
+.live-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    position: relative;
+    z-index: 1;
+}
+
+.live-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(230, 90, 60, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #FFFFFF;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    padding: 4px 10px;
+    border-radius: 999px;
+    flex: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+.live-tag[data-live="false"] {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: var(--chalk);
+}
+
+.live-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    animation: pulse 1.4s infinite ease-in-out;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.4;
+        transform: scale(0.75);
+    }
+}
+
+.live-meta {
+    font-size: 12px;
+    font-weight: 700;
+    color: #FFFFFF;
+    text-align: right;
+    background: rgba(255, 255, 255, 0.14);
+    padding: 4px 10px;
+    border-radius: 999px;
+}
+
+.live-scoreline {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-top: 16px;
+    position: relative;
+    z-index: 1;
+}
+
+.live-team {
+    flex: 1;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.team-crest {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    background: rgba(246, 243, 234, 0.9);
+    color: var(--pitch);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Anton', sans-serif;
+    font-size: 14px;
+    overflow: hidden;
+    flex: none;
+    padding: 5px;
+}
+
+.team-crest img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.live-team span {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.25;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.live-score {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 34px;
+    padding: 0 10px;
+    margin-top: 10px;
+    letter-spacing: -0.02em;
+}
+
+.live-score .sep {
+    color: var(--gold);
+    margin: 0 3px;
+}
+
+.live-clock {
+    text-align: center;
+    margin-top: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--gold-soft);
+    letter-spacing: 0.04em;
+    position: relative;
+    z-index: 1;
+}
+
+/* ---------- NEXT GAMES - horizontal scroll ---------- */
+.next-scroll {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+}
+
+.next-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.next-card {
+    flex: none;
+    width: 158px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 12px;
+}
+
+.next-card .fase {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--pitch);
+    background: var(--gold-soft);
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 6px;
+    margin-bottom: 8px;
+}
+
+.next-card .vs-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12.5px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.next-card .vs-row .initials {
+    width: 32px;
+    height: 32px;
+    background: var(--chalk);
+    color: var(--pitch);
+    font-size: 8.5px;
+    font-family: 'JetBrains Mono', monospace;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    overflow: hidden;
+    padding: 2px;
+    border-radius: 7px;
+}
+
+.next-card .vs-row .initials img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.next-card .team-name {
+    flex: 1;
+    margin: 0 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.next-card .meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* ---------- RESULTS LIST ---------- */
+.result-row {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+}
+
+.result-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.fase-chip {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--pitch);
+    background: var(--gold-soft);
+    padding: 2px 8px;
+    border-radius: 6px;
+}
+
+.result-time {
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--ink-soft);
+}
+
+.result-match {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.result-team {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.result-team .mini-crest {
+    width: 26px;
+    height: 26px;
+    border-radius: 7px;
+}
+
+.result-team-name {
+    flex: 1;
+    min-width: 0;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.result-team.win .result-team-name {
+    color: var(--ink);
+    font-weight: 700;
+}
+
+.result-score {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--ink-soft);
+    min-width: 16px;
+    text-align: right;
+}
+
+.result-team.win .result-score {
+    color: var(--pitch);
+}
+
+/* FILTER TABS */
+.filter-tabs {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+}
+
+.filter-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.filter-tab {
+    flex: none;
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 12.5px;
+    font-weight: 700;
+    background: var(--card);
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.filter-tab.active {
+    background: var(--pitch);
+    color: var(--chalk);
+    border-color: var(--pitch);
+}
+
+.empty-note {
+    text-align: center;
+    color: var(--ink-soft);
+    font-size: 13px;
+    padding: 30px 0;
+}
+
+/* ---------- STANDINGS ---------- */
+.group-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.g-tab {
+    flex: 1;
+    text-align: center;
+    padding: 7px 0;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    background: var(--card);
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+    cursor: pointer;
+}
+
+.g-tab.active {
+    background:
+        radial-gradient(circle at 12% -10%, rgba(255, 255, 255, 0.10), transparent 55%),
+        linear-gradient(135deg, var(--pitch-light) 0%, var(--pitch) 55%, #0D251C 100%);
+    color: var(--chalk);
+}
+
+.standings-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+table.standings {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+}
+
+table.standings th {
+    text-align: center;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+    padding: 10px 6px;
+    border-bottom: 1px solid var(--line);
+    font-weight: 700;
+}
+
+table.standings th:first-child {
+    text-align: left;
+    padding-left: 14px;
+}
+
+table.standings td {
+    text-align: center;
+    padding: 9px 6px;
+    border-bottom: 1px solid var(--line);
+}
+
+table.standings tr:last-child td {
+    border-bottom: none;
+}
+
+table.standings td:first-child {
+    text-align: left;
+    padding-left: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+table.standings td.pts {
+    font-weight: 800;
+    color: var(--pitch);
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.mini-crest {
+    width: 32px;
+    height: 32px;
+    background: var(--chalk);
+    color: var(--pitch);
+    font-size: 7.5px;
+    font-family: 'JetBrains Mono', monospace;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    overflow: hidden;
+    padding: 2px;
+    border-radius: 7px;
+}
+
+.mini-crest img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* ---------- CLASSIFICAÇÃO COMPLETA (página dedicada) ---------- */
+.group-block {
+    margin-bottom: 22px;
+}
+
+.group-block:last-child {
+    margin-bottom: 0;
+}
+
+.group-block-title {
+    display: inline-block;
+    font-family: 'Anton', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    color: var(--chalk);
+    background:
+        radial-gradient(circle at 12% -10%, rgba(255, 255, 255, 0.10), transparent 55%),
+        linear-gradient(135deg, var(--pitch-light) 0%, var(--pitch) 55%, #0D251C 100%);
+    padding: 6px 16px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+}
+
+.group-block-title.final {
+    background: linear-gradient(135deg, #E8C877 0%, var(--gold) 55%, #A9781F 100%);
+    color: var(--pitch);
+}
+
+.sub-group-title {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-soft);
+    margin: 16px 0 8px;
+}
+
+.group-block-title.final+.sub-group-title {
+    margin-top: 4px;
+}
+
+table.standings {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+}
+
+table.standings th {
+    text-align: center;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+    padding: 10px 6px;
+    border-bottom: 1px solid var(--line);
+    font-weight: 700;
+}
+
+table.standings th:first-child {
+    text-align: left;
+    padding-left: 14px;
+}
+
+table.standings td {
+    text-align: center;
+    padding: 9px 6px;
+    border-bottom: 1px solid var(--line);
+}
+
+table.standings tr:last-child td {
+    border-bottom: none;
+}
+
+table.standings td:first-child {
+    text-align: left;
+    padding-left: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+table.standings td.pts {
+    font-weight: 800;
+    color: var(--pitch);
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.mini-crest {
+    width: 32px;
+    height: 32px;
+    background: var(--chalk);
+    color: var(--pitch);
+    font-size: 7.5px;
+    font-family: 'JetBrains Mono', monospace;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    overflow: hidden;
+    padding: 2px;
+    border-radius: 7px;
+}
+
+.mini-crest img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* ---------- INFO STRIP ---------- */
+.info-strip {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.info-box {
+    flex: 1;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 12px;
+    text-align: center;
+}
+
+.info-box i {
+    font-size: 13px;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 6px;
+}
+
+.info-box .num {
+    font-family: 'Anton', sans-serif;
+    font-size: 20px;
+    color: var(--pitch);
+}
+
+.info-box .lbl {
+    font-size: 10px;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-top: 2px;
+}
+
+.footer-note {
+    text-align: center;
+    font-size: 11px;
+    color: var(--ink-soft);
+    padding: 26px 20px 0;
+    line-height: 1.6;
+}
+
+/* ---------- EQUIPAS ---------- */
+.team-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 10px;
+}
+
+.team-card-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.team-card-crest {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    background: var(--chalk);
+    color: var(--pitch);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    overflow: hidden;
+    flex: none;
+    padding: 4px;
+}
+
+.team-card-crest img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.team-card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+.team-card-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.grupo-chip {
+    align-self: flex-start;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--pitch);
+    background: var(--gold-soft);
+    padding: 2px 8px;
+    border-radius: 6px;
+}
+
+.team-highlights {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.highlight {
+    flex: 1;
+    background: var(--chalk);
+    border-radius: 12px;
+    padding: 10px 6px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.highlight i {
+    font-size: 12px;
+    color: var(--gold);
+}
+
+.highlight-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 800;
+    font-size: 15px;
+    color: var(--pitch);
+}
+
+.highlight-lbl {
+    font-size: 8.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ink-soft);
+    text-align: center;
+}
+
+.squad-title {
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--ink-soft);
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+    margin-bottom: 10px;
+}
+
+.squad-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.squad-item {
+    background: var(--chalk);
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--ink);
+    white-space: nowrap;
+}
+
+.section-note {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    margin: -4px 0 4px;
+}
+
+.sponsor-tier {
+    margin-bottom: 22px;
+}
+
+.sponsor-tier:last-child {
+    margin-bottom: 0;
+}
+
+.sponsor-tier-title {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--ink-soft);
+    padding-left: 10px;
+    border-left: 3px solid var(--gold);
+    margin-bottom: 10px;
+}
+
+.sponsor-tier[data-tier="prata"] .sponsor-tier-title {
+    border-left-color: #B8C1C8;
+}
+
+.sponsor-tier[data-tier="bronze"] .sponsor-tier-title {
+    border-left-color: #C08A55;
+}
+
+.sponsors-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.sponsor-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 16px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+}
+
+.sponsor-logo {
+    width: 100%;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--pitch);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+}
+
+.sponsor-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.sponsor-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .live-dot,
+    .animate-in,
+    .comp-fade-in {
+        animation: none !important;
+    }
+
+    #viewOutlet.view-enter {
+        animation: none !important;
+    }
+
+    .crest-img {
+        transition: none;
+        opacity: 1;
+    }
+
+    .h-tab,
+    .filter-tab,
+    .g-tab {
+        transition: none;
+    }
+}
+
+/* ---------- ADMIN ---------- */
+.admin-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 16px;
+}
+
+.admin-login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.admin-login-form input {
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    font-size: 14px;
+    font-family: inherit;
+}
+
+.admin-btn {
+    background: var(--pitch);
+    color: var(--chalk);
+    border: none;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.admin-btn-secundario {
+    background: var(--card);
+    color: var(--pitch);
+    border: 1px solid var(--line);
+}
+
+.admin-btn-guardar {
+    background: var(--gold);
+    color: var(--pitch);
+}
+
+.admin-erro {
+    color: var(--live);
+    font-size: 12.5px;
+    margin-top: 4px;
+}
+
+.admin-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.admin-game-row {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 10px;
+}
+
+.admin-game-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.admin-team-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.admin-team-fixed {
+    flex: 1;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--ink);
+}
+
+.admin-select {
+    flex: 1;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    font-size: 12.5px;
+    font-family: inherit;
+    background: var(--chalk);
+    color: var(--ink);
+}
+
+.admin-golos-input,
+.admin-minuto-input {
+    width: 56px;
+    padding: 8px 6px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    text-align: center;
+}
+
+.admin-controls-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
+}
+
+.admin-controls-row .admin-select {
+    flex: none;
+    width: 130px;
+}
+
+.admin-controls-row .admin-btn {
+    margin-left: auto;
+}
+
+.admin-status {
+    margin: 8px 0 0;
+    font-size: 12px;
+    color: var(--ink-soft);
+    min-height: 14px;
+}
+
+.admin-status-ok {
+    color: var(--pitch);
+    font-weight: 700;
+}
+
+.admin-status-erro {
+    color: var(--live);
+    font-weight: 700;
+}

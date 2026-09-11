@@ -1,0 +1,39 @@
+<!--
+  Componente reutilizável: cartão de uma equipa na aba "Equipas".
+  Ao contrário da Classificação (tabela J/V/E/D/Pts), aqui o foco é
+  o plantel (número + nome) e um par de estatísticas "extra" em
+  formato de destaque (ícone + número), para não repetir o mesmo
+  layout da página de Classificação.
+-->
+<template id="tpl-team-card">
+    <div class="team-card">
+        <div class="team-card-top">
+            <div class="team-card-crest" data-slot="crest"></div>
+            <div class="team-card-info">
+                <span class="team-card-name" data-slot="nome"></span>
+                <span class="grupo-chip" data-slot="grupo"></span>
+            </div>
+        </div>
+
+        <div class="team-highlights">
+            <div class="highlight">
+                <i class="fa-solid fa-futbol"></i>
+                <span class="highlight-val" data-slot="golos"></span>
+                <span class="highlight-lbl">Golos</span>
+            </div>
+            <div class="highlight">
+                <i class="fa-solid fa-stopwatch"></i>
+                <span class="highlight-val" data-slot="minpg"></span>
+                <span class="highlight-lbl">Min / Golo</span>
+            </div>
+            <div class="highlight">
+                <i class="fa-solid fa-calendar-day"></i>
+                <span class="highlight-val" data-slot="jogos"></span>
+                <span class="highlight-lbl">Jogos</span>
+            </div>
+        </div>
+
+        <div class="squad-title">Plantel</div>
+        <div class="squad-list" data-slot="squad"></div>
+    </div>
+</template>

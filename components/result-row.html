@@ -1,0 +1,24 @@
+<!--
+  Componente reutilizável: linha de um jogo já terminado,
+  usada na lista "Resultados de hoje".
+-->
+<template id="tpl-result-row">
+  <div class="result-row">
+    <div class="result-header">
+      <span class="fase-chip" data-slot="fase"></span>
+      <span class="result-time" data-slot="hora"></span>
+    </div>
+    <div class="result-match">
+      <div class="result-team" data-slot="row-casa">
+        <span class="mini-crest" data-slot="crest-casa"></span>
+        <span class="result-team-name" data-slot="nome-casa"></span>
+        <span class="result-score" data-slot="golos-casa"></span>
+      </div>
+      <div class="result-team" data-slot="row-fora">
+        <span class="mini-crest" data-slot="crest-fora"></span>
+        <span class="result-team-name" data-slot="nome-fora"></span>
+        <span class="result-score" data-slot="golos-fora"></span>
+      </div>
+    </div>
+  </div>
+</template>

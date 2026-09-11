@@ -1,0 +1,21 @@
+<!--
+  Componente reutilizável: cartão compacto de "próximo jogo",
+  usado na fila de scroll horizontal "A seguir".
+-->
+<template id="tpl-next-card">
+  <div class="next-card">
+    <span class="fase" data-slot="fase"></span>
+    <div class="vs-row">
+      <span class="initials" data-slot="crest-casa"></span>
+      <span class="team-name" data-slot="nome-casa"></span>
+    </div>
+    <div class="vs-row">
+      <span class="initials" data-slot="crest-fora"></span>
+      <span class="team-name" data-slot="nome-fora"></span>
+    </div>
+    <div class="meta">
+      <span data-slot="hora"></span>
+      <span data-slot="campo"></span>
+    </div>
+  </div>
+</template>

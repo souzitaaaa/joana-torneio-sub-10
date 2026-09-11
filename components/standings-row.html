@@ -1,0 +1,18 @@
+<!--
+  Componente reutilizável: uma linha (<tr>) da tabela de classificação,
+  usada na secção "Classificação" para cada equipa do grupo ativo.
+-->
+<template id="tpl-standings-row">
+  <tr>
+    <td>
+      <span class="mini-crest" data-slot="crest"></span>
+      <span data-slot="nome"></span>
+    </td>
+    <td data-slot="j"></td>
+    <td data-slot="v"></td>
+    <td data-slot="e"></td>
+    <td data-slot="d"></td>
+    <td data-slot="dg"></td>
+    <td class="pts" data-slot="pts"></td>
+  </tr>
+</template>

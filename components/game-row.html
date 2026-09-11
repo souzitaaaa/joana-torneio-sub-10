@@ -1,0 +1,25 @@
+<!--
+  Componente reutilizável: linha de um jogo na página "Jogos".
+  Ao contrário do result-row (só jogos terminados), este suporta
+  os 3 estados: agendado, a_decorrer, terminado.
+-->
+<template id="tpl-game-row">
+    <div class="result-row">
+        <div class="result-header">
+            <span class="fase-chip" data-slot="fase"></span>
+            <span class="result-time" data-slot="tempo"></span>
+        </div>
+        <div class="result-match">
+            <div class="result-team" data-slot="row-casa">
+                <span class="mini-crest" data-slot="crest-casa"></span>
+                <span class="result-team-name" data-slot="nome-casa"></span>
+                <span class="result-score" data-slot="golos-casa"></span>
+            </div>
+            <div class="result-team" data-slot="row-fora">
+                <span class="mini-crest" data-slot="crest-fora"></span>
+                <span class="result-team-name" data-slot="nome-fora"></span>
+                <span class="result-score" data-slot="golos-fora"></span>
+            </div>
+        </div>
+    </div>
+</template>
