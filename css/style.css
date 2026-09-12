@@ -997,16 +997,31 @@ table.standings td.pts {
     text-align: center;
 }
 
-.squad-title {
-    font-size: 10px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    color: var(--ink-soft);
+.squad-tabs {
+    display: flex;
+    gap: 6px;
     margin-top: 16px;
     padding-top: 12px;
     border-top: 1px solid var(--line);
     margin-bottom: 10px;
+}
+
+.squad-tab {
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    background: var(--chalk);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 5px 12px;
+    cursor: pointer;
+}
+
+.squad-tab.active {
+    background: var(--pitch);
+    color: var(--chalk);
+    border-color: var(--pitch);
 }
 
 .squad-list {
@@ -1023,6 +1038,17 @@ table.standings td.pts {
     font-weight: 600;
     color: var(--ink);
     white-space: nowrap;
+}
+
+.squad-list[hidden] {
+    display: none;
+}
+
+.squad-list .empty-note {
+    width: 100%;
+    text-align: left;
+    padding: 4px 0;
+    margin: 0;
 }
 
 .section-note {

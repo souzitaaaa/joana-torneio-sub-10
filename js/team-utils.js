@@ -1,4 +1,4 @@
-import { EQUIPAS, JOGADORES } from './data.js';
+import { EQUIPAS, JOGADORES, STAFF_TECNICO } from './data.js';
 
 export function equipa(id) { return EQUIPAS.find(e => e.id === id); }
 
@@ -7,6 +7,13 @@ export function equipa(id) { return EQUIPAS.find(e => e.id === id); }
  */
 export function squadForTeam(id) {
     return JOGADORES.filter(j => j.equipa_id === id).sort((a, b) => a.nome.localeCompare(b.nome));
+}
+
+/**
+ * Devolve a equipa técnica (treinadores, delegados, etc.) de uma equipa.
+ */
+export function staffForTeam(id) {
+    return STAFF_TECNICO.filter(s => s.equipa_id === id).sort((a, b) => a.nome.localeCompare(b.nome));
 }
 
 /**

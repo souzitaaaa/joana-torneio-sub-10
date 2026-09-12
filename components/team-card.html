@@ -1,9 +1,11 @@
 <!--
   Componente reutilizável: cartão de uma equipa na aba "Equipas".
   Ao contrário da Classificação (tabela J/V/E/D/Pts), aqui o foco é
-  o plantel (número + nome) e um par de estatísticas "extra" em
-  formato de destaque (ícone + número), para não repetir o mesmo
-  layout da página de Classificação.
+  o plantel/equipa técnica (só nomes — sem número de camisola, não
+  temos essa informação) e um par de estatísticas "extra" em formato
+  de destaque (ícone + número), para não repetir o mesmo layout da
+  Classificação. Plantel e Equipa Técnica ficam em separadores dentro
+  do próprio cartão (só um é mostrado de cada vez).
 -->
 <template id="tpl-team-card">
     <div class="team-card">
@@ -33,7 +35,11 @@
             </div>
         </div>
 
-        <div class="squad-title">Plantel</div>
+        <div class="squad-tabs">
+            <button type="button" class="squad-tab active" data-squad-tab="plantel">Plantel</button>
+            <button type="button" class="squad-tab" data-squad-tab="staff">Equipa Técnica</button>
+        </div>
         <div class="squad-list" data-slot="squad"></div>
+        <div class="squad-list" data-slot="staff" hidden></div>
     </div>
 </template>

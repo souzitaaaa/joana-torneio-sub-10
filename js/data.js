@@ -18,6 +18,7 @@ import { supabase } from './supabase-client.js';
 export let EQUIPAS = [];
 export let JOGOS = [];
 export let JOGADORES = [];
+export let STAFF_TECNICO = [];
 export let PATROCINADORES = [];
 
 export let FASE_LABEL = {};
@@ -63,17 +64,18 @@ function jogoDoSupabase(row) {
  * periódico para ires vendo os resultados ao vivo).
  */
 export async function carregarDados() {
-    const [fases, campos, tiers, equipas, jogos, jogadores, patrocinadores] = await Promise.all([
+    const [fases, campos, tiers, equipas, jogos, jogadores, staffTecnico, patrocinadores] = await Promise.all([
         supabase.from('fases').select('*'),
         supabase.from('campos').select('*'),
         supabase.from('tiers_patrocinador').select('*').order('ordem'),
         supabase.from('equipas').select('*').order('id'),
         supabase.from('jogos').select('*').order('id'),
         supabase.from('jogadores').select('*').order('nome'),
+        supabase.from('staff_tecnico').select('*').order('nome'),
         supabase.from('patrocinadores').select('*'),
     ]);
 
-    const resultados = { fases, campos, tiers, equipas, jogos, jogadores, patrocinadores };
+    const resultados = { fases, campos, tiers, equipas, jogos, jogadores, staffTecnico, patrocinadores };
     for (const [nome, resultado] of Object.entries(resultados)) {
         if (resultado.error) {
             throw new Error(`Erro a carregar "${nome}" do Supabase: ${resultado.error.message}`);
@@ -91,6 +93,7 @@ export async function carregarDados() {
     EQUIPAS = equipas.data;
     JOGOS = jogos.data.map(jogoDoSupabase);
     JOGADORES = jogadores.data;
+    STAFF_TECNICO = staffTecnico.data;
     PATROCINADORES = patrocinadores.data;
 }
 
