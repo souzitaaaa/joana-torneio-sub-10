@@ -69,21 +69,7 @@ export function renderClassificacaoCompleta() {
     wrap.innerHTML = '';
     animIndex = 0;
 
-    // ---- Fase de grupos (sempre disponível) ----
-    GRUPOS.forEach(grupo => {
-        const bloco = document.createElement('div');
-        bloco.className = 'group-block';
-
-        const titulo = document.createElement('div');
-        titulo.className = 'group-block-title';
-        titulo.textContent = `Grupo ${grupo}`;
-        bloco.appendChild(titulo);
-
-        bloco.appendChild(criarCardClassificacao(calcularClassificacao(grupo)));
-        wrap.appendChild(bloco);
-    });
-
-    // ---- Fase final (só quando os 3 grupos terminarem) ----
+    // ---- Fase final primeiro (é a que interessa a partir da tarde) ----
     const finalBloco = document.createElement('div');
     finalBloco.className = 'group-block';
 
@@ -109,4 +95,18 @@ export function renderClassificacaoCompleta() {
     }
 
     wrap.appendChild(finalBloco);
+
+    // ---- Fase de grupos depois (sempre disponível, fica como consulta) ----
+    GRUPOS.forEach(grupo => {
+        const bloco = document.createElement('div');
+        bloco.className = 'group-block';
+
+        const titulo = document.createElement('div');
+        titulo.className = 'group-block-title';
+        titulo.textContent = `Grupo ${grupo}`;
+        bloco.appendChild(titulo);
+
+        bloco.appendChild(criarCardClassificacao(calcularClassificacao(grupo)));
+        wrap.appendChild(bloco);
+    });
 }

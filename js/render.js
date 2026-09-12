@@ -1,7 +1,7 @@
 import { JOGOS, FASE_LABEL, CAMPO_LABEL } from './data.js';
 import { loadTemplate } from './components.js';
 import { setCrest } from './team-utils.js';
-import { calcularClassificacao, resolverEquipaJogo } from './stats.js';
+import { calcularClassificacao, calcularClassificacaoFinal, todosGruposTerminados, resolverEquipaJogo } from './stats.js';
 import { animateIn } from './animate.js';
 
 // Templates carregados uma única vez (ver initRenderTemplates)
@@ -115,18 +115,49 @@ export function renderResults() {
     });
 }
 
-/* ---------- Classificação por grupo (resumo, na home) ---------- */
-let grupoAtivo = 'A';
+/* ---------- Classificação (resumo, na home) ----------
+   Antes de a fase de grupos terminar, mostra Grupo A/B/C. Assim que
+   os 3 grupos terminarem, troca automaticamente para as ligas da
+   fase final (Campeões/Europa/Conferência) — já não faz sentido
+   continuar a mostrar os grupos, que deixaram de ter jogos por
+   disputar. */
+const GRUPOS = [
+    { chave: 'A', label: 'Grupo A' },
+    { chave: 'B', label: 'Grupo B' },
+    { chave: 'C', label: 'Grupo C' },
+];
+
+const LIGAS_FINAIS = [
+    { chave: 'liga_campeoes', label: 'Liga Campeões' },
+    { chave: 'liga_europa', label: 'Liga Europa' },
+    { chave: 'liga_conferencia', label: 'Liga Conferência' },
+];
+
+let abaAtiva = null;
+
+function opcoesAtuais() {
+    return todosGruposTerminados() ? LIGAS_FINAIS : GRUPOS;
+}
+
+function garantirAbaAtivaValida() {
+    const opcoes = opcoesAtuais();
+    if (!opcoes.some(o => o.chave === abaAtiva)) {
+        abaAtiva = opcoes[0].chave;
+    }
+}
 
 export function renderGroupTabs() {
+    garantirAbaAtivaValida();
+    const opcoes = opcoesAtuais();
+
     const tabs = document.getElementById('groupTabs');
-    tabs.innerHTML = ['A', 'B', 'C'].map(g =>
-        `<div class="g-tab ${g === grupoAtivo ? 'active' : ''}" data-grupo="${g}">Grupo ${g}</div>`
+    tabs.innerHTML = opcoes.map(o =>
+        `<div class="g-tab ${o.chave === abaAtiva ? 'active' : ''}" data-grupo="${o.chave}">${o.label}</div>`
     ).join('');
 
     tabs.querySelectorAll('.g-tab').forEach(tab => {
         tab.addEventListener('click', () => {
-            grupoAtivo = tab.dataset.grupo;
+            abaAtiva = tab.dataset.grupo;
             renderGroupTabs();
             renderStandings();
         });
@@ -134,9 +165,13 @@ export function renderGroupTabs() {
 }
 
 export function renderStandings() {
+    garantirAbaAtivaValida();
+
     const body = document.getElementById('standingsBody');
     body.innerHTML = '';
-    const tabela = calcularClassificacao(grupoAtivo);
+    const tabela = todosGruposTerminados()
+        ? calcularClassificacaoFinal(abaAtiva)
+        : calcularClassificacao(abaAtiva);
 
     tabela.forEach((row, i) => {
         const frag = tplStandingsRow.content.cloneNode(true);
